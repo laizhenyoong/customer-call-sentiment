@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import { Box, Typography, TextField, Button, Avatar, Paper, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+import { Stack, Box, Typography, TextField, Button, Avatar, Paper, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import { styled } from '@mui/system';
 
-const ChatBot = ( {messages, handleSendMessage, input, setInput, callDuration, formatTime} ) => {
+const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration, formatTime }) => {
 
   const messagesEndRef = useRef(null);
 
@@ -15,8 +15,15 @@ const ChatBot = ( {messages, handleSendMessage, input, setInput, callDuration, f
   return (
     <ChatContainer>
       <ChatHeader>
-        <Typography variant="h6">Customer Service Chat</Typography>
-        <Typography variant="body2" key={callDuration}>Call Duration: {formatTime(callDuration)}</Typography>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Stack direction="column">
+            <Typography variant="h6">Customer Service Chat</Typography>
+            <Typography variant="body2" key={callDuration}>Call Duration: {formatTime(callDuration)}</Typography>
+          </Stack>
+          <Button variant="contained" color="primary" sx={{ minWidth: '120px' }}>
+            Analyse
+          </Button>
+        </Stack>
       </ChatHeader>
       <ChatMessagesContainer>
         <List>

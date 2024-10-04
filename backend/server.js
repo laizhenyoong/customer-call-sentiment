@@ -13,6 +13,39 @@ app.use(cors({
     origin: 'http://localhost:3000'
 }));
 
+app.post('/createCustomer', async (req, res) => {
+    try {
+        const { messages, formattedMessages } = req.body;
+
+        // 1. Generate a response using OpenAI with the system context
+        const systemPrompt = messages.length == 1 
+        ? 
+        `You are a customer of a telecom company. Please start a conversation 
+        with me in full without any introductory phrases like "Sure! Here’s a 
+        reply as a customer."
+        
+        ${formattedMessages}
+        `
+        :
+        `You are a customer of a telecom company. Please respond to the conversation 
+        in full without any introductory phrases like "Sure! Here’s a reply as a 
+        .customer.
+        
+        ${formattedMessages}
+        "
+        `;
+        const aiMessage = await queryOpenAI(messages, "", systemPrompt);
+ 
+        // 2. Return the AI response back to the frontend
+        res.status(200).json({
+            aiResponse: aiMessage,
+        });
+    } catch (error) {
+        console.error('Error processing request:', error);
+        res.status(500).json({ error: 'An error occurred while processing your request.' });
+    }
+});
+
 app.post('/adminSentiment', async (req, res) => {
     try {
         const { message } = req.body;

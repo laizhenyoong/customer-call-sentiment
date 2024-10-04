@@ -25,38 +25,18 @@ const useRealTimeUpdates = (initialData, interval = 5000) => {
 const RealTime = () => {
 
   // Conversations variable
-  const [messages, setMessages] = useState([
-    {
-      text: "Hello! How can I assist you today?",
-      sender: 'admin',
-      timestamp: new Date().toLocaleTimeString(),
-      sentiment: 'Neutral',
-      sentimentScore: 0.5,
-    },
-    {
-      text: "I'm having trouble with my account.",
-      sender: 'customer',
-      timestamp: new Date().toLocaleTimeString(),
-      sentiment: 'Negative',
-      sentimentScore: 0.3,
-    },
-    {
-      text: "I'm sorry to hear that. Can you please provide more details about the issue you're experiencing?",
-      sender: 'admin',
-      timestamp: new Date().toLocaleTimeString(),
-      sentiment: 'Neutral',
-      sentimentScore: 0.5,
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
   // User Input variable
   const [input, setInput] = useState('');
   // Call Duration variable
   const [callDuration, setCallDuration] = useState(0);
   // Topic Checklist variable
   const [checklist, setChecklist] = useState([
-    { text: 'Solve customer problem', checked: false },
     { text: 'Wish the customer well', checked: false },
-    { text: 'Offer additional assistance', checked: false },
+    { text: 'Identify Customer Needs', checked: false },
+    { text: 'Empathize with Customer Concerns', checked: false },
+    { text: 'Solve customer problem', checked: false },
+    { text: 'Express Gratitude', checked: false },
     { text: 'Summarize the conversation', checked: false },
   ]);
   // List of Checklist items
@@ -104,9 +84,7 @@ const RealTime = () => {
     e.preventDefault();
     if (input.trim() === '') return;
 
-    // Check for customer sentiment
-
-    // Check for admin sentiment
+    // 1) Check for admin sentiment
 
     const newMessage = {
       text: input,
@@ -118,7 +96,7 @@ const RealTime = () => {
 
     setMessages([...messages, newMessage]);
 
-    // Tick checklist if topic was discussed by admin
+    // 2) Tick checklist if topic was discussed by admin
     try {
       const response = await fetch('http://localhost:5000/checkTopics', {
         method: 'POST',
@@ -133,9 +111,9 @@ const RealTime = () => {
       }
 
       const data = await response.json();
- 
+
       let responseString = data.aiResponse; // e.g., "1,2,4"
-      
+
       // Convert the string into an array of numbers
       // Also, adjust for 0-based index
       let mentionedTopics = responseString.split(',').map(num => Number(num) - 1); // [0, 1, 3]
@@ -153,6 +131,31 @@ const RealTime = () => {
     }
 
     setInput('');
+
+    // 3) Generate customer AI response
+    try {
+
+      const response = await fetch('http://localhost:5000/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+
+      let responseString = data.aiResponse;
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+
+    // 4) Check for customer sentiment
 
     // Simulate customer response
     setTimeout(() => {
