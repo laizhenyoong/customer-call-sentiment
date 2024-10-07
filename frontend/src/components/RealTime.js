@@ -1,26 +1,9 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import ChatBot from './ChatBot';
 import EmotionAnalysis from './EmotionAnalysis';
-
-// Custom hook for real-time updates
-const useRealTimeUpdates = (initialData, interval = 5000) => {
-  const [data, setData] = useState(initialData);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const newDataPoint = {
-        time: new Date().toLocaleTimeString(),
-        score: Math.random().toFixed(2),
-      };
-      setData(prevData => [...prevData.slice(-9), newDataPoint]);
-    }, interval);
-
-    return () => clearInterval(timer);
-  }, [interval]);
-
-  return data;
-};
+import { checkTopics, generateCustomerResponse } from '../api';
+import { useRealTimeUpdates, formatTime } from '../utils/hooks';
 
 const RealTime = () => {
 
@@ -52,10 +35,9 @@ const RealTime = () => {
     { time: '0:20', score: 0.5 },
   ];
 
-
   const emotionData = useRealTimeUpdates(initialEmotionData);
 
-  // Function to handle checklist toggel
+  // Function to handle checklist toggle
   const handleChecklistToggle = (index) => {
     const newChecklist = [...checklist];
     newChecklist[index].checked = !newChecklist[index].checked;
@@ -69,14 +51,6 @@ const RealTime = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
-
-  // Function to format time correctly
-  const formatTime = useCallback((seconds) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   }, []);
 
   // Function to handle send messages
@@ -96,21 +70,11 @@ const RealTime = () => {
 
     setMessages([...messages, newMessage]);
 
+    setInput('');
+
     // 2) Tick checklist if topic was discussed by admin
     try {
-      const response = await fetch('http://localhost:5000/checkTopics', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: input, topics: checklistTopics }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
+      const data = await checkTopics(input, checklistTopics);
 
       let responseString = data.aiResponse; // e.g., "1,2,4"
 
@@ -127,35 +91,10 @@ const RealTime = () => {
       );
 
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error checking topics:', error);
     }
 
-    setInput('');
-
-    // 3) Generate customer AI response
-    try {
-
-      const response = await fetch('http://localhost:5000/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-
-      let responseString = data.aiResponse;
-
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-
-    // 4) Check for customer sentiment
+    // 3) Check for customer sentiment
 
     // Simulate customer response
     setTimeout(() => {

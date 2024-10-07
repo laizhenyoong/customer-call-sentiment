@@ -20,9 +20,11 @@ const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration, f
             <Typography variant="h6">Customer Service Chat</Typography>
             <Typography variant="body2" key={callDuration}>Call Duration: {formatTime(callDuration)}</Typography>
           </Stack>
+
           <Button variant="contained" color="primary" sx={{ minWidth: '120px' }}>
             Analyse
           </Button>
+
         </Stack>
       </ChatHeader>
       <ChatMessagesContainer>
