@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Stack, Box, Typography, TextField, Button, Avatar, Paper, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import { styled } from '@mui/system';
+import { saveAs } from 'file-saver'; // Import saveAs from 'file-saver'
 
 const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration, formatTime }) => {
 
@@ -12,6 +13,17 @@ const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration, f
 
   useEffect(scrollToBottom, [messages]);
 
+  // Function to handle End Chat and save data as JSON
+  const handleEndChat = () => {
+    const chatData = {
+      messages,
+      callDuration: formatTime(callDuration),
+    };
+
+    const blob = new Blob([JSON.stringify(chatData, null, 2)], { type: 'application/json' });
+    saveAs(blob, `chat-data-${new Date().toLocaleDateString()}.txt`);
+  };
+
   return (
     <ChatContainer>
       <ChatHeader>
@@ -21,7 +33,7 @@ const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration, f
             <Typography variant="body2" key={callDuration}>Call Duration: {formatTime(callDuration)}</Typography>
           </Stack>
 
-          <Button variant="contained" color="primary" sx={{ minWidth: '120px' }}>
+          <Button variant="contained" color="primary" sx={{ minWidth: '120px' }} onClick={handleEndChat}>
             Analyse
           </Button>
 
