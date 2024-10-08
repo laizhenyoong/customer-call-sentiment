@@ -4,7 +4,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import ChatBot from './ChatBot';
 import EmotionAnalysis from './EmotionAnalysis';
 import FloatingCustomerChat from './FloatingCustomerChat';
-import { checkTopics } from '../api';
+import { checkTopics } from '../utils/api';
 import { useRealTimeUpdates, formatTime } from '../utils/hooks';
 
 const RealTime = () => {
@@ -32,12 +32,6 @@ const RealTime = () => {
   ];
 
   const emotionData = useRealTimeUpdates(initialEmotionData);
-
-  const handleChecklistToggle = (index) => {
-    const newChecklist = [...checklist];
-    newChecklist[index].checked = !newChecklist[index].checked;
-    setChecklist(newChecklist);
-  };
 
   useEffect(() => {
     const timer = setInterval(() => {

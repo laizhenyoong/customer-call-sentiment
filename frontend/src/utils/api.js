@@ -2,6 +2,48 @@
 
 const API_BASE_URL = 'http://localhost:5000';
 
+export const getCustomerSentiment = async (message) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/customerSentiment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error getting sentiment for customer:', error);
+    throw error;
+  }
+};
+
+export const getAdminSentiment = async (message) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/adminSentiment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error getting sentiment for admin:', error);
+    throw error;
+  }
+};
+
 export const checkTopics = async (message, topics) => {
   try {
     const response = await fetch(`${API_BASE_URL}/checkTopics`, {
@@ -19,27 +61,6 @@ export const checkTopics = async (message, topics) => {
     return await response.json();
   } catch (error) {
     console.error('Error checking topics:', error);
-    throw error;
-  }
-};
-
-export const generateCustomerResponse = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({}),
-    });
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error generating customer response:', error);
     throw error;
   }
 };

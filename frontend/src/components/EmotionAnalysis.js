@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, TextField, Button, Paper, Tabs, Tab, List, ListItem, ListItemIcon, ListItemText, Checkbox } from '@mui/material';
 import { styled } from '@mui/system';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { queryGPT } from '../api';
+import { queryGPT } from '../utils/api';
 
 const EmotionAnalysis = ({ checklist, emotionData }) => {
   // User Input for GPT variable
