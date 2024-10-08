@@ -160,8 +160,8 @@ const RealTime = () => {
         text: "Thank you for your help. I'm still having issues accessing my account. It says my password is incorrect, but I'm sure I'm using the right one.",
         sender: 'customer',
         timestamp: new Date().toLocaleTimeString(),
-        sentiment: 'Negative',
-        sentimentScore: 0.3,
+        sentiment: 'Negative', //update this line
+        sentimentScore: 0.3,  //update this line
       };
       setMessages(prevMessages => [...prevMessages, customerResponse]);
     }, 1000);

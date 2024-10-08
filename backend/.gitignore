@@ -64,3 +64,5 @@ read*lock
 
 # Java Classes
 .class
+
+.env
