@@ -1,34 +1,25 @@
-# VSCode extension
-
-# Store launch config in repo but not settings
-.vscode/settings.json
-/.favorites.json
-
-# TypeScript incremental build states
-*.tsbuildinfo
-**/deploy.zip
-
-# Local state files & OS specifics
 .DS_Store
-deploy_env/
-node_modules/
-lerna-debug.log
-dist/
-lib/
-target/
-pack/
-.BUILD_COMPLETED
-.local-npm/
-.tools/
-coverage/
-.nyc_output
-.nycrc
-.LAST_BUILD
-*.sw[a-z]
-*~
+node_modules
+/dist
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
 .idea
-*.iml
-junit.xml
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # We don't want tsconfig at the root
 /tsconfig.json

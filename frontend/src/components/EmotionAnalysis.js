@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, TextField, Button, Paper, Tabs, Tab, List, ListItem, ListItemIcon, ListItemText, Checkbox } from '@mui/material';
 import { styled } from '@mui/system';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { queryGPT } from '../utils/api';
 
 const EmotionAnalysis = ({ checklist, emotionData }) => {
   // User Input for GPT variable
@@ -28,24 +29,12 @@ const EmotionAnalysis = ({ checklist, emotionData }) => {
     setGptInput('');
 
     try {
-      const response = await fetch('http://localhost:5000/queryGPT', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ queryText: gptInput }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
+      const data = await queryGPT(gptInput);
       const newResponse = { type: 'response', text: data.aiResponse }; // Use AI response from server
       setChatHistory((prev) => [...prev, newResponse]); // Update chat history with AI response
 
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error querying GPT:', error);
       const errorResponse = { type: 'response', text: 'Error fetching response from the server.' };
       setChatHistory((prev) => [...prev, errorResponse]); // Add error response to chat history
     }
@@ -54,6 +43,21 @@ const EmotionAnalysis = ({ checklist, emotionData }) => {
   // Function to handle changing tabs
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
+  };
+
+  // Function to parse text and convert newlines and bold text
+  const parseText = (text) => {
+    return text.split('\n').map((line, index) => (
+      <React.Fragment key={index}>
+        {line.split(/(\*\*.*?\*\*)/).map((part, i) => {
+          if (part.startsWith('**') && part.endsWith('**')) {
+            return <strong key={i}>{part.slice(2, -2)}</strong>;
+          }
+          return part;
+        })}
+        {index < text.split('\n').length - 1 && <br />}
+      </React.Fragment>
+    ));
   };
 
   return (
@@ -80,17 +84,18 @@ const EmotionAnalysis = ({ checklist, emotionData }) => {
           <Tab label="Discussion Topics Checklist" />
         </Tabs>
         {tabValue === 0 && (
-          <ChatContainer>
-            <ChatMessages>
+          <GptContainer>
+            <GptMessages>
               {chatHistory.map((message, index) => (
-                <ChatMessage key={index} className={message.type}>
+                <GptMessage key={index} className={message.type}>
                   <Typography variant="body2">
-                    <strong>{message.type === 'question' ? 'Question:' : 'Response:'}</strong> {message.text}
+                    <strong>{message.type === 'question' ? 'Question:' : 'Response:'}</strong>{' '}
+                    {parseText(message.text)}
                   </Typography>
-                </ChatMessage>
+                </GptMessage>
               ))}
               <div ref={chatEndRef} />
-            </ChatMessages>
+            </GptMessages>
             <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', padding: '0.5rem' }}>
               <TextField
                 fullWidth
@@ -105,7 +110,7 @@ const EmotionAnalysis = ({ checklist, emotionData }) => {
                 Send
               </Button>
             </Box>
-          </ChatContainer>
+          </GptContainer>
         )}
         {tabValue === 1 && (
           <List sx={{ overflowY: 'auto', flex: 1 }}>
@@ -129,14 +134,14 @@ const EmotionAnalysis = ({ checklist, emotionData }) => {
   );
 };
 
-const AnalysisContainer = styled(Box)( {
+const AnalysisContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   height: '100%',
   overflow: 'hidden',
 });
 
-const ChartContainer = styled(Paper)( {
+const ChartContainer = styled(Paper)({
   flex: '0 0 40%',
   margin: '0.5rem',
   padding: '0.5rem',
@@ -144,21 +149,21 @@ const ChartContainer = styled(Paper)( {
   flexDirection: 'column',
 });
 
-const TabContainer = styled(Box)( {
+const TabContainer = styled(Box)({
   flex: '1 1 60%',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
 });
 
-const ChatContainer = styled(Box)( {
+const GptContainer = styled(Box)({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
 });
 
-const ChatMessages = styled(Box)( {
+const GptMessages = styled(Box)({
   flexGrow: 1,
   overflowY: 'auto',
   padding: '0.5rem',
@@ -178,7 +183,7 @@ const ChatMessages = styled(Box)( {
   },
 });
 
-const ChatMessage = styled(Box)( {
+const GptMessage = styled(Box)({
   marginBottom: '0.5rem',
   padding: '0.5rem',
   borderRadius: '4px',
