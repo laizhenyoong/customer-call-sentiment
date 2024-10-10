@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, Tabs, Tab, Paper, Grid, List, ListItem, ListItemText, CircularProgress, LinearProgress } from '@mui/material';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -33,39 +33,107 @@ const AIInsightItem = ({ name, score }) => {
 
 const PostCall = () => {
   const [tabValue, setTabValue] = useState(0);
+  const [callData, setCallData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Fetch data from the backend
+    fetch('http://localhost:5000/data')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setCallData(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setLoading(false);
+      });
+  }, []);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
 
-  // Mock data - replace with actual data in a real implementation
-  const csatScore = 85;
-  const conversationResult = "Upgraded package";
-  const overallSentiment = "Positive";
-  const timeTaken = "15:30";
-  const overallPerformance = 88;
+  if (loading) {
+    return <Typography>Loading data...</Typography>;
+  }
+
+  if (error) {
+    return <Typography>Error fetching data: {error}</Typography>;
+  }
+
+  if (!callData) {
+    return <Typography>No data available</Typography>;
+  }
+
+  const { overallSummary, agentSummary, customerSummary, conversationalInsight, overallPerformance, aiInsight, timeConsumption } = callData;
+
+  // Transform the dynamic topicsDiscussed data into a format suitable for recharts
+  const topicsDiscussed = Object.entries(callData.topicsDiscussed).map(([name, value]) => ({
+    name,
+    value,
+  }));
+
+  const csatScore = conversationalInsight.csatScore;
+  const conversationResult = conversationalInsight.conversationResult;
+  const overallSentiment = conversationalInsight.overallSentimentRating;
+  const timeTaken = `${timeConsumption.agent + timeConsumption.customer + timeConsumption.notTalking} seconds`;
 
   const aiInsights = [
-    { name: "Introduction", score: 90 },
-    { name: "Recommendations from agents", score: 80 },
-    { name: "Thank you message", score: 70 },
-    { name: "Topics discussed", score: 20 },
-    { name: "Attitude", score: 85 },
-    { name: "Communication skills", score: 85 },
+    { name: "Introduction", score: aiInsight.introduction },
+    { name: "Recommendations from agents", score: aiInsight.recommendation },
+    { name: "Thank you message", score: aiInsight.thankYouMessage },
+    { name: "Attitude", score: aiInsight.attitude },
+    { name: "Communication skills", score: aiInsight.communicationSkills },
   ];
 
-  const topicsDiscussed = [
-    { name: "Billing", value: 40 },
-    { name: "Technical Support", value: 30 },
-    { name: "Upgrades", value: 20 },
-    { name: "General Inquiries", value: 10 },
-  ];
+  // const topicsDiscussed = [
+  //   { name: "Billing", value: 40 }, // Replace this with actual dynamic values if available in your data
+  //   { name: "Technical Support", value: 30 },
+  //   { name: "Upgrades", value: 20 },
+  //   { name: "General Inquiries", value: 10 },
+  // ];
 
   const timeDistribution = [
-    { name: "Agent", time: 500 },
-    { name: "Customer", time: 300 },
-    { name: "Not Talking", time: 200 },
+    { name: "Agent", time: timeConsumption.agent },
+    { name: "Customer", time: timeConsumption.customer },
+    { name: "Not Talking", time: timeConsumption.notTalking },
   ];
+  
+  // // Mock data - replace with actual data in a real implementation
+  // const csatScore = data.csatScore;
+  // const conversationResult = "Upgraded package";
+  // const overallSentiment = "Positive";
+  // const timeTaken = "15:30";
+  // const overallPerformance = 88;
+
+  // const aiInsights = [
+  //   { name: "Introduction", score: 90 },
+  //   { name: "Recommendations from agents", score: 80 },
+  //   { name: "Thank you message", score: 70 },
+  //   { name: "Topics discussed", score: 20 },
+  //   { name: "Attitude", score: 85 },
+  //   { name: "Communication skills", score: 85 },
+  // ];
+
+  // const topicsDiscussed = [
+  //   { name: "Billing", value: 40 },
+  //   { name: "Technical Support", value: 30 },
+  //   { name: "Upgrades", value: 20 },
+  //   { name: "General Inquiries", value: 10 },
+  // ];
+
+  // const timeDistribution = [
+  //   { name: "Agent", time: 500 },
+  //   { name: "Customer", time: 300 },
+  //   { name: "Not Talking", time: 200 },
+  // ];
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
@@ -93,9 +161,9 @@ const PostCall = () => {
               <Tab label="Customer Summary" />
             </Tabs>
             <Box sx={{ mt: 2, overflow: 'auto', maxHeight: 'calc(100% - 48px)' }}>
-              {tabValue === 0 && <Typography>The agent addressed the customer's service outage, provided troubleshooting, and escalated the issue for further investigation. The customer was informed of the next steps and offered a temporary solution.</Typography>}
-              {tabValue === 1 && <Typography>The agent confirmed the outage, performed troubleshooting, and escalated the issue. They provided the customer with a temporary data package and outlined the resolution process.</Typography>}
-              {tabValue === 2 && <Typography>The customer reported a service outage, expressed frustration with past disruptions, and requested a quick resolution, considering alternatives if the problem continues.</Typography>}
+              {tabValue === 0 && <Typography>{overallSummary}</Typography>}
+              {tabValue === 1 && <Typography>{agentSummary}</Typography>}
+              {tabValue === 2 && <Typography>{customerSummary}</Typography>}
             </Box>
           </Paper>
           <Paper sx={{ p: 2, mb: 2, height: 'calc(33% - 8px)' }}>

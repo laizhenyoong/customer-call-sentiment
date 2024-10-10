@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Stack, Box, Typography, TextField, Button, Avatar, Paper, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import { styled } from '@mui/system';
 import { saveAs } from 'file-saver'; // Import saveAs from 'file-saver'
+import { analyzeData } from '../utils/api';
 
 const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration, formatTime }) => {
 
@@ -13,6 +14,11 @@ const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration, f
 
   useEffect(scrollToBottom, [messages]);
 
+  async function analyzeRealTimeData(chatData) {
+    const response = await analyzeData(chatData);
+    console.log(response);
+  }
+
   // Function to handle End Chat and save data as JSON
   const handleEndChat = () => {
     const chatData = {
@@ -20,65 +26,70 @@ const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration, f
       callDuration: formatTime(callDuration),
     };
 
-    const blob = new Blob([JSON.stringify(chatData, null, 2)], { type: 'application/json' });
-    saveAs(blob, `chat-data-${new Date().toLocaleDateString()}.txt`);
+    // Save the original chat data
+    const chatBlob = new Blob([JSON.stringify(chatData, null, 2)], { type: 'application/json' });
+    saveAs(chatBlob, `chat-data-${new Date().toLocaleDateString()}.json`);
+
+    analyzeRealTimeData(JSON.stringify(chatData));
+
   };
 
-  return (
-    <ChatContainer>
-      <ChatHeader>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Stack direction="column">
-            <Typography variant="h6">Customer Service Chat</Typography>
-            <Typography variant="body2" key={callDuration}>Call Duration: {formatTime(callDuration)}</Typography>
-          </Stack>
 
-          <Button variant="contained" color="primary" sx={{ minWidth: '120px' }} onClick={handleEndChat}>
-            Analyse
-          </Button>
-
+return (
+  <ChatContainer>
+    <ChatHeader>
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Stack direction="column">
+          <Typography variant="h6">Customer Service Chat</Typography>
+          <Typography variant="body2" key={callDuration}>Call Duration: {formatTime(callDuration)}</Typography>
         </Stack>
-      </ChatHeader>
-      <ChatMessagesContainer>
-        <List>
-          {messages.map((message, index) => (
-            <MessageItem key={index} alignItems="flex-start">
-              <ListItemAvatar>
-                <StyledAvatar isAdmin={message.sender === 'admin'}>{message.sender[0].toUpperCase()}</StyledAvatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <MessageContent elevation={1} isAdmin={message.sender === 'admin'}>
-                    <Typography variant="body1">{message.text}</Typography>
-                  </MessageContent>
-                }
-                secondary={
-                  <Typography variant="caption" display="block">
-                    {message.timestamp} - {message.sentiment} ({message.sentimentScore.toFixed(2)})
-                  </Typography>
-                }
-              />
-            </MessageItem>
-          ))}
-          <div ref={messagesEndRef} />
-        </List>
-      </ChatMessagesContainer>
-      <ChatInput component="form" onSubmit={handleSendMessage}>
-        <TextField
-          fullWidth
-          variant="outlined"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type your message..."
-          size="small"
-          sx={{ mr: 1 }}
-        />
-        <Button type="submit" variant="contained" color="primary">
-          Send
+
+        <Button variant="contained" color="primary" sx={{ minWidth: '120px' }} onClick={handleEndChat}>
+          Analyse
         </Button>
-      </ChatInput>
-    </ChatContainer>
-  );
+
+      </Stack>
+    </ChatHeader>
+    <ChatMessagesContainer>
+      <List>
+        {messages.map((message, index) => (
+          <MessageItem key={index} alignItems="flex-start">
+            <ListItemAvatar>
+              <StyledAvatar isAdmin={message.sender === 'admin'}>{message.sender[0].toUpperCase()}</StyledAvatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <MessageContent elevation={1} isAdmin={message.sender === 'admin'}>
+                  <Typography variant="body1">{message.text}</Typography>
+                </MessageContent>
+              }
+              secondary={
+                <Typography variant="caption" display="block">
+                  {message.timestamp} - {message.sentiment} ({message.sentimentScore.toFixed(2)})
+                </Typography>
+              }
+            />
+          </MessageItem>
+        ))}
+        <div ref={messagesEndRef} />
+      </List>
+    </ChatMessagesContainer>
+    <ChatInput component="form" onSubmit={handleSendMessage}>
+      <TextField
+        fullWidth
+        variant="outlined"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Type your message..."
+        size="small"
+        sx={{ mr: 1 }}
+      />
+      <Button type="submit" variant="contained" color="primary">
+        Send
+      </Button>
+    </ChatInput>
+  </ChatContainer>
+);
 };
 
 

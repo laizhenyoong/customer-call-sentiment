@@ -1,0 +1,31 @@
+{
+    "overallSummary": "The agent addressed the customer's Wi-Fi connectivity issue, provided troubleshooting steps, and successfully restored the internet connection. The interaction concluded with customer satisfaction and confirmation of issue resolution.",
+    "agentSummary": "The agent acknowledged the customer's Wi-Fi problem, guided them through resetting the router, and performed a reset on their end, ultimately resolving the issue. They maintained a professional approach throughout the conversation.",
+    "customerSummary": "The customer initially reported connectivity problems with their Wi-Fi and followed the agent's guidance, ultimately achieving a resolution and expressing gratitude for the assistance received.",
+    "conversationalInsight": {
+        "customerSentiment": "Neutral",
+        "csatScore": 90,
+        "overallSentimentRating": "Positive",
+        "conversationResult": "Resolved connectivity issue",
+        "averageWaitingTime": null
+    },
+    "overallPerformance": 90,
+    "aiInsight": {
+        "introduction": 100,
+        "recommendation": 85,
+        "thankYouMessage": 100,
+        "attitude": 90,
+        "communicationSkills": 95
+    },
+    "timeConsumption": {
+        "agent": 300,
+        "customer": 150,
+        "notTalking": 358
+    },
+    "topicsDiscussed": {
+        "Technical Support": 70,
+        "Troubleshooting": 20,
+        "Customer Service": 5,
+        "Follow-up Actions": 5
+    }
+}

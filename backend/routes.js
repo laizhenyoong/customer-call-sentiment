@@ -1,6 +1,7 @@
 const express = require('express');
 const { queryPinecone, queryOpenAI } = require('./utils/queryUtils');
-
+const fs = require('fs');
+const path = require('path');
 const router = express.Router();
 
 router.post('/adminSentiment', async (req, res) => {
@@ -120,5 +121,81 @@ router.post('/queryGPT', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while processing your request.' });
     }
 });
+
+router.post('/analyseData', async (req, res) => {
+    try {
+        // 1) Get the messaegs from json
+        const { chatData } = req.body;
+        // 2) Create a question for chatgpt
+        const systemPrompt = `
+        Given a list of messages 
+
+        ${chatData}
+
+        Help me fill up this json template with your analysis, csat score is in average percentage, overallPerformance is in average percentage based 
+        on ai insight percentage, timeConsumption is in seconds based on conversation's time. topicsDiscussed are in percentage and the topics are not 
+        fixed based on what category the conversation is discussed. Topics are follow telco topics and give at least 4 topics.  
+        Also response me only json so that i can straight away insert into .json file remove Markdown
+
+        {
+        "overallSummary": "The agent addressed the customer's service outage, provided troubleshooting, and escalated the issue for further investigation. 
+        The customer was informed of the next steps and offered a temporary solution.",
+        "agentSummary": "The agent confirmed the outage, performed troubleshooting, and escalated the issue. 
+        They provided the customer with a temporary data package and outlined the resolution process.",
+        "customerSummary": "The customer reported a service outage, expressed frustration with past disruptions, 
+        and requested a quick resolution, considering alternatives if the problem continues.",
+        "conversationalInsight": {
+            "customerSentiment": "Negative",
+            "csatScore": 82,
+            "overallSentimentRating": "Positive",
+            "conversationResult": "Upgraded package",
+            "averageWaitingTime": null
+        },
+        "overallPerformance": 88
+        "aiInsight": {
+            "introduction": 100,
+            "recommendation": 50,
+            "thankYouMessage": 100,
+            "attitude": 80,
+            "communicationSkills": 85
+        },
+        "timeConsumption": {
+            "agent": 310,
+            "customer": 180,
+            "notTalking": 490
+        },
+        "topicsDiscussed": {
+            "Billing": 40,
+            "Technical Support": 30,
+            "Upgrades": 20,
+            "General Inquiries": 10
+        }
+        }`;
+        const aiMessage = await queryOpenAI("", "", systemPrompt);
+        console.log("system prompt: " + systemPrompt)
+        console.log("aiMessage: " + aiMessage)
+        // 3) Save json in text file
+        // Convert the object to a JSON string
+        //const jsonData = JSON.stringify(aiMessage, null, 2); // `null` for replacer, `2` for pretty printing
+
+        // Write JSON string to a file
+        fs.writeFile('data.json', aiMessage, (err) => {
+            if (err) {
+                console.error('Error writing file', err);
+            } else {
+                console.log('JSON data has been saved to data.json');
+            }
+        });
+        
+        // 2. Return 
+        res.status(200).json({
+        });
+    } catch (error) {
+        console.error('Error processing request:', error);
+        res.status(500).json({ error: 'An error occurred while processing your request.' });
+    }
+});
+console.log(__dirname);
+router.use('/data', express.static(path.join(__dirname, 'data.json')));
 
 module.exports = router;
