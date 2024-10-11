@@ -4,7 +4,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import ChatBot from './ChatBot';
 import EmotionAnalysis from './EmotionAnalysis';
 import FloatingCustomerChat from './FloatingCustomerChat';
-import { checkTopics } from '../utils/api';
+import { checkTopics, getAdminSentiment, getCustomerSentiment } from '../utils/api';
 import { useRealTimeUpdates, formatTime } from '../utils/hooks';
 
 const RealTime = () => {
@@ -44,6 +44,16 @@ const RealTime = () => {
   const handleSendMessage = async (text, sender) => {
     if (text.trim() === '') return;
 
+    // 1 Check if customer message or admin message using sender
+
+    // 2 If the sender is customer then use getCustomerSentiment
+
+    // 3 Insert the time and sentiment score into initialEmotionData 
+
+    // 4 use callDuration and get mins and score from api call like { time: '0:00', score: 0.5 }
+
+    // 5 If the sender is admin then use getAdminSentiment
+
     const newMessage = {
       text,
       sender,
@@ -52,13 +62,15 @@ const RealTime = () => {
       sentimentScore: 0.5,
     };
 
+
+
     setMessages([...messages, newMessage]);
 
     if (sender === 'admin') {
       setInput('');
       try {
-        const data = await checkTopics(text, checklistTopics);
-        let responseString = data.aiResponse;
+        const data = await checkTopics(text, checklistTopics); // 1 line example
+        let responseString = data.aiResponse; // 2 line example
         let mentionedTopics = responseString.split(',').map(num => Number(num) - 1);
 
         setChecklist(prevChecklist =>

@@ -20,7 +20,7 @@ router.post('/adminSentiment', async (req, res) => {
         Given the following admin message, please evaluate the professionalism
         of the message and provide a score between 0 (unprofessional) and 1 
         (highly professional).
-        `;
+        `; //logic/role need to be adjusted TODO
         const admin_sentiment_score = await queryOpenAI(message, "", systemPrompt2);
 
         // 2. Return 
@@ -51,6 +51,8 @@ router.post('/customerSentiment', async (req, res) => {
         score between 0 (negative) and 1 (positive).
         `;
         const customer_sentiment_score = await queryOpenAI(message, "", systemPrompt2);
+
+        console.log("customer sentiment: " + customer_sentiment)
 
         // 2. Return 
         res.status(200).json({
