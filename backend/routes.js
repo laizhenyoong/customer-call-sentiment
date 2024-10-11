@@ -7,21 +7,17 @@ router.post('/adminSentiment', async (req, res) => {
     try {
         const { message } = req.body;
 
-        // 1. Generate a response to categorize admin sentiment 
-        const systemPrompt1 = `
-        Given the following admin message, please identify and provide in a 
-        single word a relevant category that this message falls into, which 
-        could be useful for organizing or analyzing admin communications.
-        `;
-        const admin_sentiment = await queryOpenAI(message, "", systemPrompt1);
-
         // 2.  Generate a response for admin sentiment score
-        const systemPrompt2 = `
+        const systemPrompt1 = `
         Given the following admin message, please evaluate the professionalism
         of the message and provide a score between 0 (unprofessional) and 1 
-        (highly professional).
+        (highly professional), only provide the score and sentiment with this format sentiment - score
         `; //logic/role need to be adjusted TODO
-        const admin_sentiment_score = await queryOpenAI(message, "", systemPrompt2);
+        const admin_sentiment_score = await queryOpenAI(message, "", systemPrompt1);
+
+        // Zhen part
+
+        const admin_sentiment = "Neutral"
 
         // 2. Return 
         res.status(200).json({
@@ -41,14 +37,36 @@ router.post('/customerSentiment', async (req, res) => {
         // 1. Generate a response to categorize customer sentiment 
         const systemPrompt1 = `
         Given the following customer message, please provide a single word 
-        that best describes how the customer is feeling.
+        that best describes how the customer is feeling following below list:
+        Delighted
+        Grateful
+        Satisfied
+        Impressed
+        Content
+        Neutral
+        Confused
+        Impatient
+        Frustrated
+        Disappointed
+        Angry
         `;
         const customer_sentiment = await queryOpenAI(message, "", systemPrompt1);
 
         // 2.  Generate a response for customer sentiment score
         const systemPrompt2 = `
-        Given the following customer message, please provide the sentiment 
-        score between 0 (negative) and 1 (positive).
+        Given the following customer message, please provide only by numbers with the sentiment 
+        score between 0 and 1, following below list, provide only numbers:
+        Delighted - 1.0
+        Grateful - 0.9
+        Satisfied - 0.8
+        Impressed - 0.7
+        Content - 0.6
+        Neutral - 0.5
+        Confused - 0.4
+        Impatient - 0.3
+        Frustrated - 0.2
+        Disappointed - 0.1
+        Angry - 0.0
         `;
         const customer_sentiment_score = await queryOpenAI(message, "", systemPrompt2);
 

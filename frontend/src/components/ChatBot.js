@@ -42,7 +42,7 @@ const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration, f
                 }
                 secondary={
                   <Typography variant="caption" display="block">
-                    {message.timestamp} - {message.sentiment} ({message.sentimentScore.toFixed(2)})
+                    {message.timestamp} - {message.sentiment} ({message.sentimentScore})
                   </Typography>
                 }
               />

@@ -20,18 +20,14 @@ const RealTime = () => {
     { text: 'Express Gratitude', checked: false },
     { text: 'Summarize the conversation', checked: false },
   ]);
+
   const checklistTopics = checklist
     .map((item, index) => `${index + 1}. ${item.text}`)
     .join('\n');
-  const initialEmotionData = [
-    { time: '0:00', score: 0.5 },
-    { time: '0:05', score: 0.6 },
-    { time: '0:10', score: 0.4 },
-    { time: '0:15', score: 0.7 },
-    { time: '0:20', score: 0.5 },
-  ];
 
-  const emotionData = useRealTimeUpdates(initialEmotionData);
+  const[emotionData, setEmotionData] = useState([
+    // { time: new Date().toLocaleTimeString(), score: 0.3  },
+  ]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -44,33 +40,39 @@ const RealTime = () => {
   const handleSendMessage = async (text, sender) => {
     if (text.trim() === '') return;
 
-    // 1 Check if customer message or admin message using sender
+    // 1 Check if customer message or admin message using sender - done
 
-    // 2 If the sender is customer then use getCustomerSentiment
+    if (sender === 'customer') {
+      const data = await getCustomerSentiment(text); // 2 If the sender is customer then use getCustomerSentiment - done
+      let customer_sentiment = data.customer_sentiment;
+      let customer_sentiment_score = data.customer_sentiment_score
+      
+      const newMessage = {
+        text,
+        sender,
+        timestamp: new Date().toLocaleTimeString(),
+        sentiment: customer_sentiment, 
+        sentimentScore: customer_sentiment_score,
+      };
+  
+      setMessages([...messages, newMessage]);
 
-    // 3 Insert the time and sentiment score into initialEmotionData 
+      // 3 Insert the time and sentiment score into initialEmotionData - done
 
-    // 4 use callDuration and get mins and score from api call like { time: '0:00', score: 0.5 }
+      setEmotionData(prevData => [
+        ...prevData,
+        { time: new Date().toLocaleTimeString(), score: customer_sentiment_score }
+      ]);
+    
+    } 
 
-    // 5 If the sender is admin then use getAdminSentiment
-
-    const newMessage = {
-      text,
-      sender,
-      timestamp: new Date().toLocaleTimeString(),
-      sentiment: 'Neutral',
-      sentimentScore: 0.5,
-    };
-
-
-
-    setMessages([...messages, newMessage]);
+    // 4 use callDuration and get mins and score from api call like { time: '0:00', score: 0.5 } - ??
 
     if (sender === 'admin') {
       setInput('');
       try {
-        const data = await checkTopics(text, checklistTopics); // 1 line example
-        let responseString = data.aiResponse; // 2 line example
+        const data = await checkTopics(text, checklistTopics);
+        let responseString = data.aiResponse;
         let mentionedTopics = responseString.split(',').map(num => Number(num) - 1);
 
         setChecklist(prevChecklist =>
@@ -82,6 +84,20 @@ const RealTime = () => {
       } catch (error) {
         console.error('Error checking topics:', error);
       }
+      
+      const data = await getAdminSentiment(text); // 5 If the sender is admin then use getAdminSentiment - done
+      let admin_sentiment_score = data.admin_sentiment_score
+        
+      const newMessage = {
+        text,
+        sender,
+        timestamp: new Date().toLocaleTimeString(),
+        sentiment: "", 
+        sentimentScore: admin_sentiment_score,
+      };
+  
+      setMessages([...messages, newMessage]);
+
     } 
   };
 

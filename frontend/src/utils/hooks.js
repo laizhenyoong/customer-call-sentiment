@@ -8,7 +8,7 @@ export const useRealTimeUpdates = (initialData, interval = 5000) => {
     const timer = setInterval(() => {
       const newDataPoint = {
         time: new Date().toLocaleTimeString(),
-        score: Math.random().toFixed(2),
+        score: Math.random(),
       };
       setData(prevData => [...prevData.slice(-9), newDataPoint]);
     }, interval);
