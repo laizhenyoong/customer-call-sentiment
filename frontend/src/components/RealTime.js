@@ -4,8 +4,8 @@ import ChatIcon from '@mui/icons-material/Chat';
 import ChatBot from './ChatBot';
 import EmotionAnalysis from './EmotionAnalysis';
 import FloatingCustomerChat from './FloatingCustomerChat';
-import { checkTopics } from '../utils/api';
-import { useRealTimeUpdates, formatTime } from '../utils/hooks';
+import { checkTopics, getAdminSentiment, getCustomerSentiment } from '../utils/api';
+import { formatTime } from '../utils/hooks';
 
 const RealTime = () => {
   const [messages, setMessages] = useState([]);
@@ -23,15 +23,7 @@ const RealTime = () => {
   const checklistTopics = checklist
     .map((item, index) => `${index + 1}. ${item.text}`)
     .join('\n');
-  const initialEmotionData = [
-    { time: '0:00', score: 0.5 },
-    { time: '0:05', score: 0.6 },
-    { time: '0:10', score: 0.4 },
-    { time: '0:15', score: 0.7 },
-    { time: '0:20', score: 0.5 },
-  ];
-
-  const emotionData = useRealTimeUpdates(initialEmotionData);
+  const [emotionData, setEmotionData] = useState([]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -41,15 +33,37 @@ const RealTime = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const updateEmotionData = (score) => {
+    setEmotionData(prevData => [
+      ...prevData,
+      { time: new Date().toLocaleTimeString(), score }
+    ]);
+  };
+
   const handleSendMessage = async (text, sender) => {
     if (text.trim() === '') return;
+
+    let sentiment, sentimentScore;
+
+    if (sender === 'admin') {
+      const adminSentimentData = await getAdminSentiment(text);
+      console.log(adminSentimentData)
+      sentiment = adminSentimentData.admin_sentiment;
+      sentimentScore = adminSentimentData.admin_sentiment_score;
+    } else {
+      const customerSentimentData = await getCustomerSentiment(text);
+      console.log(customerSentimentData)
+      sentiment = customerSentimentData.customer_sentiment;
+      sentimentScore = customerSentimentData.customer_sentiment_score;
+      updateEmotionData(sentimentScore);
+    }
 
     const newMessage = {
       text,
       sender,
       timestamp: new Date().toLocaleTimeString(),
-      sentiment: 'Neutral',
-      sentimentScore: 0.5,
+      sentiment: sentiment,
+      sentimentScore: sentimentScore,
     };
 
     setMessages([...messages, newMessage]);
@@ -70,7 +84,7 @@ const RealTime = () => {
       } catch (error) {
         console.error('Error checking topics:', error);
       }
-    } 
+    }
   };
 
   return (
@@ -95,7 +109,7 @@ const RealTime = () => {
         />
       </Box>
       {isChatOpen ? (
-        <FloatingCustomerChat 
+        <FloatingCustomerChat
           messages={messages}
           onSendMessage={handleSendMessage}
           onClose={() => setIsChatOpen(false)}

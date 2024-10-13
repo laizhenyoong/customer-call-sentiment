@@ -1,0 +1,30 @@
+{
+    "overallSummary": "The customer sought assistance in migrating their family plan to their main account under the CelcomDigi 5G 160 plan and clarified the porting process involved. The agent provided clear guidance on the required steps and associated costs, leading to a positive resolution.",
+    "agentSummary": "The agent addressed the customer's concerns regarding the migration of family lines to the main account and clarified the porting process, providing necessary details and costs involved.",
+    "customerSummary": "The customer inquired about migrating family lines to their main account under the CelcomDigi 5G 160 plan and sought clarification on the porting process and associated fees.",
+    "conversationalInsight": {
+        "csatScore": 90,
+        "conversationResult": "Successful migration advice",
+        "customerSentiment": "Positive",
+        "overallCallDuration": "00:01:40"
+    },
+    "overallPerformance": 85,
+    "aiInsight": {
+        "introduction": 80,
+        "recommendation": 90,
+        "thankYouMessage": 90,
+        "attitude": 85,
+        "communicationSkills": 90
+    },
+    "timeConsumption": {
+        "agent": 80,
+        "customer": 60,
+        "notTalking": 20
+    },
+    "topicsDiscussed": {
+        "Porting Process": 30,
+        "Plan Migration": 30,
+        "Costs Involved": 20,
+        "Customer Support": 20
+    }
+}

@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { Stack, Box, Typography, TextField, Button, Avatar, Paper, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import { styled } from '@mui/system';
+import { formatTime } from '../utils/hooks';
+import { analyseData } from '../utils/api';
 
-const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration, formatTime }) => {
+const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration }) => {
 
   const messagesEndRef = useRef(null);
 
@@ -11,6 +13,19 @@ const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration, f
   };
 
   useEffect(scrollToBottom, [messages]);
+
+  // Function to analyse conversation
+  const handleEndChat = async () => {
+    try {
+
+      const chatData = JSON.stringify({ messages,callDuration: formatTime(callDuration)});
+
+      const response = await analyseData(chatData);
+
+    } catch (error) {
+      console.error('Error analysing conversation', error);
+    }
+  }
 
   return (
     <ChatContainer>
@@ -21,7 +36,7 @@ const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration, f
             <Typography variant="body2" key={callDuration}>Call Duration: {formatTime(callDuration)}</Typography>
           </Stack>
 
-          <Button variant="contained" color="primary" sx={{ minWidth: '120px' }}>
+          <Button variant="contained" color="primary" sx={{ minWidth: '120px' }} onClick={handleEndChat}>
             Analyse
           </Button>
 
@@ -42,7 +57,7 @@ const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration, f
                 }
                 secondary={
                   <Typography variant="caption" display="block">
-                    {message.timestamp} - {message.sentiment} ({message.sentimentScore.toFixed(2)})
+                    {message.timestamp} - {message.sentiment} ({message.sentimentScore})
                   </Typography>
                 }
               />

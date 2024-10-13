@@ -1,23 +1,20 @@
-import React, { useState } from 'react';
-import { Box, Typography, Tabs, Tab, Paper, Grid, List, ListItem, ListItemText, CircularProgress, LinearProgress } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Tabs, Tab, Paper, Grid, List, ListItem, LinearProgress, CircularProgress } from '@mui/material';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import TimerIcon from '@mui/icons-material/Timer';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
+// Component for AI Insight Items
 const AIInsightItem = ({ name, score }) => {
-  const getColor = (score) => {
-    if (score > 80) return 'success';
-    if (score > 40) return 'warning';
-    return 'error';
-  };
+  const getColor = (score) => (score > 80 ? 'success' : score > 40 ? 'warning' : 'error');
 
   return (
     <ListItem>
       <Box sx={{ width: '100%' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-          <Typography variant="body2">{name}</Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+          <Typography variant="body2" noWrap>{name}</Typography> {/* Set noWrap to prevent text overflow */}
           <Typography variant="body2" color="text.secondary">{score}%</Typography>
         </Box>
         <LinearProgress
@@ -33,53 +30,58 @@ const AIInsightItem = ({ name, score }) => {
 
 const PostCall = () => {
   const [tabValue, setTabValue] = useState(0);
+  const [callData, setCallData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
+  useEffect(() => {
+    fetch('http://localhost:5000/data')
+      .then((response) => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then((data) => {
+        setCallData(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setLoading(false);
+      });
+  }, []);
 
-  // Mock data - replace with actual data in a real implementation
-  const csatScore = 85;
-  const conversationResult = "Upgraded package";
-  const overallSentiment = "Positive";
-  const timeTaken = "15:30";
-  const overallPerformance = 88;
+  const handleTabChange = (_, newValue) => setTabValue(newValue);
+
+  if (loading) return <Typography>Loading data...</Typography>;
+  if (error) return <Typography>Error fetching data: {error}</Typography>;
+  if (!callData) return <Typography>No data available</Typography>;
+
+  const {
+    overallSummary,
+    agentSummary,
+    customerSummary,
+    conversationalInsight,
+    overallPerformance,
+    aiInsight,
+    timeConsumption,
+    topicsDiscussed
+  } = callData;
 
   const aiInsights = [
-    { name: "Introduction", score: 90 },
-    { name: "Recommendations from agents", score: 80 },
-    { name: "Thank you message", score: 70 },
-    { name: "Topics discussed", score: 20 },
-    { name: "Attitude", score: 85 },
-    { name: "Communication skills", score: 85 },
+    { name: 'Introduction', score: aiInsight.introduction },
+    { name: 'Recommendations from agents', score: aiInsight.recommendation },
+    { name: 'Thank you message', score: aiInsight.thankYouMessage },
+    { name: 'Attitude', score: aiInsight.attitude },
+    { name: 'Communication skills', score: aiInsight.communicationSkills }
   ];
 
-  const topicsDiscussed = [
-    { name: "Billing", value: 40 },
-    { name: "Technical Support", value: 30 },
-    { name: "Upgrades", value: 20 },
-    { name: "General Inquiries", value: 10 },
-  ];
-
-  const timeDistribution = [
-    { name: "Agent", time: 500 },
-    { name: "Customer", time: 300 },
-    { name: "Not Talking", time: 200 },
-  ];
+  const topicData = Object.entries(topicsDiscussed).map(([name, value]) => ({ name, value }));
+  const timeTaken = `${timeConsumption.agent + timeConsumption.customer + timeConsumption.notTalking} seconds`;
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-  const getHeartColor = (score) => {
-    if (score > 80) return 'green';
-    if (score > 40) return 'yellow';
-    return 'red';
-  };
-
-  const getPerformanceColor = (score) => {
-    if (score > 80) return 'green';
-    if (score > 40) return 'yellow';
-    return 'red';
-  };
+  const getHeartColor = (score) => (score > 80 ? 'green' : score > 40 ? 'yellow' : 'red');
+  const getPerformanceColor = getHeartColor;
 
   return (
     <Box sx={{ padding: 2, height: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -93,9 +95,9 @@ const PostCall = () => {
               <Tab label="Customer Summary" />
             </Tabs>
             <Box sx={{ mt: 2, overflow: 'auto', maxHeight: 'calc(100% - 48px)' }}>
-              {tabValue === 0 && <Typography>The agent addressed the customer's service outage, provided troubleshooting, and escalated the issue for further investigation. The customer was informed of the next steps and offered a temporary solution.</Typography>}
-              {tabValue === 1 && <Typography>The agent confirmed the outage, performed troubleshooting, and escalated the issue. They provided the customer with a temporary data package and outlined the resolution process.</Typography>}
-              {tabValue === 2 && <Typography>The customer reported a service outage, expressed frustration with past disruptions, and requested a quick resolution, considering alternatives if the problem continues.</Typography>}
+              {tabValue === 0 && <Typography>{overallSummary}</Typography>}
+              {tabValue === 1 && <Typography>{agentSummary}</Typography>}
+              {tabValue === 2 && <Typography>{customerSummary}</Typography>}
             </Box>
           </Paper>
           <Paper sx={{ p: 2, mb: 2, height: 'calc(33% - 8px)' }}>
@@ -103,20 +105,20 @@ const PostCall = () => {
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={3}>
                 <Box display="flex" flexDirection="column" alignItems="center">
-                  <FavoriteIcon sx={{ color: getHeartColor(csatScore), fontSize: 40, mb: 1 }} />
-                  <Typography variant="body2" align="center">CSAT: {csatScore}</Typography>
+                  <FavoriteIcon sx={{ color: getHeartColor(conversationalInsight.csatScore), fontSize: 40, mb: 1 }} />
+                  <Typography variant="body2" align="center">CSAT: {conversationalInsight.csatScore}</Typography>
                 </Box>
               </Grid>
               <Grid item xs={3}>
                 <Box display="flex" flexDirection="column" alignItems="center">
                   <CheckCircleIcon sx={{ color: 'green', fontSize: 40, mb: 1 }} />
-                  <Typography variant="body2" align="center">{conversationResult}</Typography>
+                  <Typography variant="body2" align="center">{conversationalInsight.conversationResult}</Typography>
                 </Box>
               </Grid>
               <Grid item xs={3}>
                 <Box display="flex" flexDirection="column" alignItems="center">
                   <EmojiEmotionsIcon sx={{ color: 'orange', fontSize: 40, mb: 1 }} />
-                  <Typography variant="body2" align="center">{overallSentiment}</Typography>
+                  <Typography variant="body2" align="center">{conversationalInsight.customerSentiment}</Typography>
                 </Box>
               </Grid>
               <Grid item xs={3}>
@@ -174,7 +176,7 @@ const PostCall = () => {
                 <ResponsiveContainer width="100%" height="80%">
                   <PieChart>
                     <Pie
-                      data={topicsDiscussed}
+                      data={topicData}
                       cx="50%"
                       cy="50%"
                       innerRadius="40%"
@@ -183,7 +185,7 @@ const PostCall = () => {
                       paddingAngle={5}
                       dataKey="value"
                     >
-                      {topicsDiscussed.map((entry, index) => (
+                      {topicData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -193,14 +195,16 @@ const PostCall = () => {
                 </ResponsiveContainer>
               </Paper>
               <Paper sx={{ p: 2, flex: 1 }}>
-                <Typography variant="h6" gutterBottom>Time Distribution</Typography>
+                <Typography variant="h6" gutterBottom>Time Consumption</Typography>
                 <ResponsiveContainer width="100%" height="80%">
-                  <BarChart data={timeDistribution} layout="vertical">
-                    <XAxis type="number" />
-                    <YAxis dataKey="name" type="category" width={100} />
+                  <BarChart data={[timeConsumption]}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="time" fill="#8884d8" />
+                    <Bar dataKey="agent" fill="#8884d8" />
+                    <Bar dataKey="customer" fill="#82ca9d" />
+                    <Bar dataKey="notTalking" fill="#ffc658" />
                   </BarChart>
                 </ResponsiveContainer>
               </Paper>

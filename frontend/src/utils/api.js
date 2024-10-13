@@ -85,3 +85,24 @@ export const queryGPT = async (queryText) => {
     throw error;
   }
 };
+
+export const analyseData = async (chatData) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/analyseData`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ chatData }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error analysing data:', error);
+    throw error;
+  }
+}
