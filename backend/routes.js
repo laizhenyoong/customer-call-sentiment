@@ -37,18 +37,7 @@ router.post('/customerSentiment', async (req, res) => {
         // 1. Generate a response to categorize customer sentiment 
         const systemPrompt1 = `
         Given the following customer message, please provide a single word 
-        that best describes how the customer is feeling following below list:
-        Delighted
-        Grateful
-        Satisfied
-        Impressed
-        Content
-        Neutral
-        Confused
-        Impatient
-        Frustrated
-        Disappointed
-        Angry
+        that best describes how the customer is feeling following below list
         `;
         const customer_sentiment = await queryOpenAI(message, "", systemPrompt1);
 
