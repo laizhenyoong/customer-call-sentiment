@@ -36,30 +36,25 @@ router.post('/customerSentiment', async (req, res) => {
 
         // 1. Generate a response to categorize customer sentiment 
         const systemPrompt1 = `
-        Given the following customer message, please provide a single word 
-        that best describes how the customer is feeling following below list
+        Given the following customer message, analyze the message and provide the
+        best description on how the customer is feeling.
+
+        Please return the described feeling in only a SINGLE word, following this format example: Feeling: Happy
         `;
         const customer_sentiment = await queryOpenAI(message, "", systemPrompt1);
 
         // 2.  Generate a response for customer sentiment score
         const systemPrompt2 = `
-        Given the following customer message, please provide only by numbers with the sentiment 
-        score between 0 and 1, following below list, provide only numbers:
-        Delighted - 1.0
-        Grateful - 0.9
-        Satisfied - 0.8
-        Impressed - 0.7
-        Content - 0.6
-        Neutral - 0.5
-        Confused - 0.4
-        Impatient - 0.3
-        Frustrated - 0.2
-        Disappointed - 0.1
-        Angry - 0.0
+        Given the following customer message, analyze the message and provide the sentiment
+        score which best matched the customer message.
+        
+        The score should ONLY within range of 0 (Negative) and 1 (Positive). 
+        Please return the score only in 1 decimal places, following this format example: Score: 0.2 Negative
         `;
         const customer_sentiment_score = await queryOpenAI(message, "", systemPrompt2);
 
         console.log("customer sentiment: " + customer_sentiment)
+        console.log(customer_sentiment_score)
 
         // 2. Return 
         res.status(200).json({
