@@ -1,31 +1,31 @@
 {
-    "overallSummary": "The agent addressed the customer's Wi-Fi connectivity issue, provided troubleshooting steps, and successfully restored the internet connection. The interaction concluded with customer satisfaction and confirmation of issue resolution.",
-    "agentSummary": "The agent acknowledged the customer's Wi-Fi problem, guided them through resetting the router, and performed a reset on their end, ultimately resolving the issue. They maintained a professional approach throughout the conversation.",
-    "customerSummary": "The customer initially reported connectivity problems with their Wi-Fi and followed the agent's guidance, ultimately achieving a resolution and expressing gratitude for the assistance received.",
+    "overallSummary": "The agent addressed the customer's Wi-Fi connectivity issue, provided troubleshooting steps, and confirmed the resolution. The customer expressed satisfaction after fixing the issue.",
+    "agentSummary": "The agent acknowledged the customer's problem, offered potential fixes, and ensured the issue was resolved. They maintained a professional demeanor throughout the interaction.",
+    "customerSummary": "The customer reported a problem with Wi-Fi connectivity and expressed frustration at not having internet access. After troubleshooting, the customer confirmed the network was restored.",
     "conversationalInsight": {
         "customerSentiment": "Neutral",
         "csatScore": 90,
-        "overallSentimentRating": "Positive",
-        "conversationResult": "Resolved connectivity issue",
+        "overallSentimentRating": "Neutral",
+        "conversationResult": "Issue Resolved",
         "averageWaitingTime": null
     },
     "overallPerformance": 90,
     "aiInsight": {
         "introduction": 100,
-        "recommendation": 85,
+        "recommendation": 60,
         "thankYouMessage": 100,
-        "attitude": 90,
-        "communicationSkills": 95
+        "attitude": 85,
+        "communicationSkills": 90
     },
     "timeConsumption": {
-        "agent": 300,
-        "customer": 150,
-        "notTalking": 358
+        "agent": 92,
+        "customer": 15,
+        "notTalking": 50
     },
     "topicsDiscussed": {
-        "Technical Support": 70,
-        "Troubleshooting": 20,
-        "Customer Service": 5,
-        "Follow-up Actions": 5
+        "Technical Support": 50,
+        "Wi-Fi Issues": 30,
+        "Troubleshooting Steps": 15,
+        "Customer Service Interaction": 5
     }
 }
