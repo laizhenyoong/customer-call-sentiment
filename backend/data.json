@@ -1,30 +1,30 @@
 {
-    "overallSummary": "The customer experienced frustration with their WiFi connectivity and sought assistance in migrating their family plan to a personal account. The conversation concluded positively after the agent helped the customer.",
-    "agentSummary": "The agent attempted to address the customer's WiFi issues but initially responded unprofessionally. However, they later provided assistance that the customer appreciated.",
-    "customerSummary": "The customer expressed frustration with poor WiFi performance and requested to switch their mobile plan to a personal account while showing interest in the CelcomDigi 5G 160 plan.",
+    "overallSummary": "The customer reported a slow internet connection while streaming, leading to frustration. The agent acknowledged the issue and informed the customer about ongoing maintenance in their area. Despite the inconvenience, the customer was given advice to improve the situation temporarily.",
+    "agentSummary": "The agent responded empathetically to the customer's concerns, checked for issues in the customer's area, and provided troubleshooting advice, but maintained a less professional tone throughout.",
+    "customerSummary": "The customer expressed frustration with slow internet speeds, particularly while streaming content, and was seeking solutions to improve their connection. They were hopeful for a resolution after the maintenance period.",
     "conversationalInsight": {
-        "csatScore": 80,
-        "conversationResult": "Customer satisfied with resolution",
-        "customerSentiment": "Positive",
-        "overallCallDuration": "00:51:41"
+        "csatScore": 60,
+        "conversationResult": "Maintenance issue acknowledged",
+        "customerSentiment": "Neutral",
+        "overallCallDuration": "00:04:22"
     },
-    "overallPerformance": 75,
+    "overallPerformance": 50,
     "aiInsight": {
-        "introduction": 60,
-        "recommendation": 70,
-        "thankYouMessage": 100,
+        "introduction": 70,
+        "recommendation": 60,
+        "thankYouMessage": 50,
         "attitude": 40,
-        "communicationSkills": 60
+        "communicationSkills": 50
     },
     "timeConsumption": {
-        "agent": 1861,
-        "customer": 1982,
-        "notTalking": 2940
+        "agent": 45,
+        "customer": 55,
+        "notTalking": 0
     },
     "topicsDiscussed": {
-        "WiFi Issues": 35,
-        "Plan Migration": 30,
-        "Customer Frustration": 25,
-        "Agent Professionalism": 10
+        "Internet Speed Issues": 30,
+        "Network Maintenance": 30,
+        "Troubleshooting Steps": 20,
+        "Customer Support Availability": 20
     }
 }
