@@ -1,30 +1,30 @@
 {
-    "overallSummary": "The customer sought assistance in migrating their family plan to their main account under the CelcomDigi 5G 160 plan and clarified the porting process involved. The agent provided clear guidance on the required steps and associated costs, leading to a positive resolution.",
-    "agentSummary": "The agent addressed the customer's concerns regarding the migration of family lines to the main account and clarified the porting process, providing necessary details and costs involved.",
-    "customerSummary": "The customer inquired about migrating family lines to their main account under the CelcomDigi 5G 160 plan and sought clarification on the porting process and associated fees.",
+    "overallSummary": "The customer experienced frustration with their WiFi connectivity and sought assistance in migrating their family plan to a personal account. The conversation concluded positively after the agent helped the customer.",
+    "agentSummary": "The agent attempted to address the customer's WiFi issues but initially responded unprofessionally. However, they later provided assistance that the customer appreciated.",
+    "customerSummary": "The customer expressed frustration with poor WiFi performance and requested to switch their mobile plan to a personal account while showing interest in the CelcomDigi 5G 160 plan.",
     "conversationalInsight": {
-        "csatScore": 90,
-        "conversationResult": "Successful migration advice",
+        "csatScore": 80,
+        "conversationResult": "Customer satisfied with resolution",
         "customerSentiment": "Positive",
-        "overallCallDuration": "00:01:40"
+        "overallCallDuration": "00:51:41"
     },
-    "overallPerformance": 85,
+    "overallPerformance": 75,
     "aiInsight": {
-        "introduction": 80,
-        "recommendation": 90,
-        "thankYouMessage": 90,
-        "attitude": 85,
-        "communicationSkills": 90
+        "introduction": 60,
+        "recommendation": 70,
+        "thankYouMessage": 100,
+        "attitude": 40,
+        "communicationSkills": 60
     },
     "timeConsumption": {
-        "agent": 80,
-        "customer": 60,
-        "notTalking": 20
+        "agent": 1861,
+        "customer": 1982,
+        "notTalking": 2940
     },
     "topicsDiscussed": {
-        "Porting Process": 30,
+        "WiFi Issues": 35,
         "Plan Migration": 30,
-        "Costs Involved": 20,
-        "Customer Support": 20
+        "Customer Frustration": 25,
+        "Agent Professionalism": 10
     }
 }
