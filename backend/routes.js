@@ -169,7 +169,7 @@ router.post('/analyseData', async (req, res) => {
             Call duration can be used as overallCallDuration
             The conversation result should be condensed into a few short words.
             Time consumption should be in seconds.
-            AI insight should be evaluated on a scale of 100.
+            AI insight should be rated on a scale of 100 to measure only the agent's performance.
             Topics discussed should be telco-related, with at least 4 topics and their percentages.
             Provide the response as a valid JSON string, without any Markdown formatting.
         `;
