@@ -21,7 +21,7 @@ router.post('/adminSentiment', async (req, res) => {
 
         if (admin_sentiment_score <= 0.4) {
             admin_sentiment = "Not Professional";
-        } else if (admin_sentiment_score <= 0.7) {
+        } else if (admin_sentiment_score < 0.6) {
             admin_sentiment = "Neutral";
         } else {
             admin_sentiment = "Professional";

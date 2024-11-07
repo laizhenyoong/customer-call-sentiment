@@ -85,7 +85,7 @@ const PostCall = () => {
 
   return (
     <Box sx={{ padding: 2, height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Typography variant="h4" gutterBottom>Post-Call Analysis</Typography>
+      <Typography variant="h4" gutterBottom>Post-Conversation Analysis</Typography>
       <Grid container spacing={2} sx={{ flexGrow: 1 }}>
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 2, mb: 2, height: 'calc(33% - 8px)' }}>
@@ -162,7 +162,7 @@ const PostCall = () => {
           <Grid container spacing={2} sx={{ height: '100%' }}>
             <Grid item xs={12} md={6}>
               <Paper sx={{ p: 2, height: '100%', overflow: 'auto' }}>
-                <Typography variant="h6" gutterBottom>AI Insights</Typography>
+                <Typography variant="h6" gutterBottom>Agent Performance</Typography>
                 <List dense>
                   {aiInsights.map((insight, index) => (
                     <AIInsightItem key={index} name={insight.name} score={insight.score} />

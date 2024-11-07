@@ -1,30 +1,30 @@
 {
-    "overallSummary": "The customer reported a slow internet connection while streaming, leading to frustration. The agent acknowledged the issue and informed the customer about ongoing maintenance in their area. Despite the inconvenience, the customer was given advice to improve the situation temporarily.",
-    "agentSummary": "The agent responded empathetically to the customer's concerns, checked for issues in the customer's area, and provided troubleshooting advice, but maintained a less professional tone throughout.",
-    "customerSummary": "The customer expressed frustration with slow internet speeds, particularly while streaming content, and was seeking solutions to improve their connection. They were hopeful for a resolution after the maintenance period.",
+    "overallSummary": "The conversation involved the customer seeking guidance on switching their father's service from Maxis to Celcom, ultimately receiving detailed guidance on the process and related fees. The interaction ended positively with the customer expressing appreciation.",
+    "agentSummary": "The agent provided clear instructions on the porting process, addressed customer concerns regarding fees, offered alternatives to avoid immediate costs, and gave further assistance for ownership transfer and store locations.",
+    "customerSummary": "The customer initially inquired about porting their father's service and expressed confusion about the need for payment during porting. They sought clarification on the process and expressed a desire to change account ownership.",
     "conversationalInsight": {
-        "csatScore": 60,
-        "conversationResult": "Maintenance issue acknowledged",
-        "customerSentiment": "Neutral",
-        "overallCallDuration": "00:04:22"
+        "csatScore": 90,
+        "conversationResult": "Customer received clear guidance",
+        "customerSentiment": "Positive",
+        "overallCallDuration": "00:02:30"
     },
-    "overallPerformance": 50,
+    "overallPerformance": 85,
     "aiInsight": {
-        "introduction": 70,
-        "recommendation": 60,
-        "thankYouMessage": 50,
-        "attitude": 40,
-        "communicationSkills": 50
+        "introduction": 90,
+        "recommendation": 80,
+        "thankYouMessage": 100,
+        "attitude": 95,
+        "communicationSkills": 90
     },
     "timeConsumption": {
-        "agent": 45,
-        "customer": 55,
+        "agent": 62,
+        "customer": 38,
         "notTalking": 0
     },
     "topicsDiscussed": {
-        "Internet Speed Issues": 30,
-        "Network Maintenance": 30,
-        "Troubleshooting Steps": 20,
-        "Customer Support Availability": 20
+        "Porting Process": 40,
+        "Fees and Charges": 25,
+        "Ownership Transfer": 20,
+        "Store Locations": 15
     }
 }
