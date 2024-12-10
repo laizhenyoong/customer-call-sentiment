@@ -1,30 +1,30 @@
 {
-    "overallSummary": "The conversation involved the customer seeking guidance on switching their father's service from Maxis to Celcom, ultimately receiving detailed guidance on the process and related fees. The interaction ended positively with the customer expressing appreciation.",
-    "agentSummary": "The agent provided clear instructions on the porting process, addressed customer concerns regarding fees, offered alternatives to avoid immediate costs, and gave further assistance for ownership transfer and store locations.",
-    "customerSummary": "The customer initially inquired about porting their father's service and expressed confusion about the need for payment during porting. They sought clarification on the process and expressed a desire to change account ownership.",
+    "overallSummary": "The conversation addressed a customer's internet quota issue, and the agent provided solutions through Celcom apps, leading to a hopeful response from the customer.",
+    "agentSummary": "The agent verified the customer's identity and suggested checking the internet quota balance via the Celcom Life or MyDigi apps.",
+    "customerSummary": "The customer expressed confusion about internet quota affecting video calls and sought assistance to resolve the issue.",
     "conversationalInsight": {
-        "csatScore": 90,
-        "conversationResult": "Customer received clear guidance",
-        "customerSentiment": "Positive",
-        "overallCallDuration": "00:02:30"
+        "csatScore": 75,
+        "conversationResult": "Issue addressed, solution provided",
+        "customerSentiment": "Neutral",
+        "overallCallDuration": "00:04:13"
     },
-    "overallPerformance": 85,
+    "overallPerformance": 80,
     "aiInsight": {
         "introduction": 90,
-        "recommendation": 80,
-        "thankYouMessage": 100,
-        "attitude": 95,
-        "communicationSkills": 90
+        "recommendation": 85,
+        "thankYouMessage": 80,
+        "attitude": 90,
+        "communicationSkills": 85
     },
     "timeConsumption": {
         "agent": 62,
-        "customer": 38,
-        "notTalking": 0
+        "customer": 36,
+        "notTalking": 2
     },
     "topicsDiscussed": {
-        "Porting Process": 40,
-        "Fees and Charges": 25,
-        "Ownership Transfer": 20,
-        "Store Locations": 15
+        "Internet Quota": 50,
+        "Customer Identity Verification": 25,
+        "App Usage Guidance": 15,
+        "Video Calling Issues": 10
     }
 }

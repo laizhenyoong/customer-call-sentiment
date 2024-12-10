@@ -1,11 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Stack, Box, Typography, TextField, Button, Avatar, Paper, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import { styled } from '@mui/system';
 import { formatTime } from '../utils/hooks';
 import { analyseData } from '../utils/api';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration }) => {
-
+  const [summary, setSummary] = useState(null);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -14,18 +15,29 @@ const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration })
 
   useEffect(scrollToBottom, [messages]);
 
-  // Function to analyse conversation
+  useEffect(() => {
+    fetch('http://localhost:5001/getIssue')
+      .then((response) => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then((data) => {
+        setSummary(data.summary);
+        console.log(data.summary);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   const handleEndChat = async () => {
     try {
-
-      const chatData = JSON.stringify({ messages,callDuration: formatTime(callDuration)});
-
+      const chatData = JSON.stringify({ messages, callDuration: formatTime(callDuration) });
       const response = await analyseData(chatData);
-
     } catch (error) {
       console.error('Error analysing conversation', error);
     }
-  }
+  };
 
   return (
     <ChatContainer>
@@ -35,15 +47,30 @@ const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration })
             <Typography variant="h6">Customer Service Chat</Typography>
             <Typography variant="body2" key={callDuration}>Call Duration: {formatTime(callDuration)}</Typography>
           </Stack>
-
           <Button variant="contained" color="primary" sx={{ minWidth: '120px' }} onClick={handleEndChat}>
             Analyse
           </Button>
-
         </Stack>
       </ChatHeader>
       <ChatMessagesContainer>
         <List>
+          {summary && (
+            <SummaryItem>
+              <SummaryContent elevation={1}>
+                <Stack direction="row" spacing={2} alignItems="flex-start">
+                  <InfoOutlinedIcon color="primary" />
+                  <Stack spacing={1}>
+                    <Typography variant="subtitle2" color="primary" fontWeight="bold">
+                      Customer Issue Summary
+                    </Typography>
+                    <Typography variant="body2">
+                      {summary}
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </SummaryContent>
+            </SummaryItem>
+          )}
           {messages.map((message, index) => (
             <MessageItem key={index} alignItems="flex-start">
               <ListItemAvatar>
@@ -84,7 +111,6 @@ const ChatBot = ({ messages, handleSendMessage, input, setInput, callDuration })
   );
 };
 
-
 const ChatContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
@@ -118,6 +144,19 @@ const ChatMessagesContainer = styled(Box)({
 
 const MessageItem = styled(ListItem)({
   marginBottom: '1rem',
+});
+
+const SummaryItem = styled(ListItem)({
+  marginBottom: '2rem',
+  paddingLeft: 0,
+  paddingRight: 0,
+});
+
+const SummaryContent = styled(Paper)({
+  padding: '1rem',
+  width: '100%',
+  backgroundColor: '#e3f2fd',
+  borderLeft: '4px solid #1976d2',
 });
 
 const MessageContent = styled(Paper, {

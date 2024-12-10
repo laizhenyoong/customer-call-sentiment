@@ -195,6 +195,34 @@ router.post('/analyseData', async (req, res) => {
     }
 });
 
-router.use('/data', express.static(path.join(__dirname, 'data.json')));
+// 
+router.post('/summarizeIssue', async (req, res) => {
+    try {
+        const { transcriptData  } = req.body;
+
+        const systemPrompt = `
+            Summarize the following transcript data and output it in the JSON format: {"summary": "<Your summary here>"}. 
+            `;
+
+        const aiMessage = await queryOpenAI(transcriptData, "", systemPrompt);
+
+        // Write JSON result into a file
+        fs.writeFile('issue.json', aiMessage, (err) => {
+            if (err) {
+                console.error('Error writing file', err);
+            } else {
+                console.log('JSON data has been saved to issue.json');
+            }
+        });
+
+    } catch (error) {
+        console.error('Error processing request:', error);
+        res.status(500).json({ error: 'An error occurred while processing your request.' });
+    }
+});
+
+router.use('/getData', express.static(path.join(__dirname, 'data.json')));
+
+router.use('/getIssue', express.static(path.join(__dirname, 'issue.json')));
 
 module.exports = router;

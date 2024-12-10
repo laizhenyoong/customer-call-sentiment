@@ -1,6 +1,6 @@
 // api.js
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'http://localhost:5001';
 
 export const getCustomerSentiment = async (message) => {
   try {
@@ -94,6 +94,27 @@ export const analyseData = async (chatData) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ chatData }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error analysing data:', error);
+    throw error;
+  }
+}
+
+export const summarizeIssue = async (transcriptData) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/summarizeIssue`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ transcriptData }),
     });
 
     if (!response.ok) {

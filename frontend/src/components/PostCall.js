@@ -35,7 +35,7 @@ const PostCall = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:5000/data')
+    fetch('http://localhost:5001/getData')
       .then((response) => {
         if (!response.ok) throw new Error('Network response was not ok');
         return response.json();
